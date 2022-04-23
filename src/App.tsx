@@ -3,30 +3,37 @@ import './App.css';
 import styled from '@emotion/styled';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { InputLabel, FormControl, Divider, TextField } from '@mui/material';
-import { padding } from '@mui/system';
+import { InputLabel, FormControl, TextField } from '@mui/material';
 import { css } from '@emotion/css';
 
 
 
-const Dropdown = () => {
+const Dropdown = ({label,menuItems}: {
+	label: string;
+	menuItems:string[]
+	
+	
+	}) => {
 	const [val, setValue] = useState();
 
 	return (
 		<div>
 			<FormControl >
-				<InputLabel>Pass</InputLabel>
+				<InputLabel>{label}</InputLabel>
 				<Select
 					sx={{ minWidth: '150px' }}
 					labelId="demo-simple-select-label"
 					id="demo-simple-select"
 					value={val}
-					label="Age"
+					label={label}
 					onChange={() => setValue}
 				>
-					<MenuItem value={10}>Ten</MenuItem>
-					<MenuItem value={20}>Twenty</MenuItem>
-					<MenuItem value={30}>Thirty</MenuItem>
+					{menuItems.map(item => {
+						return (
+							<MenuItem value={item}>{item}</MenuItem>
+						)
+					})}
+
 				</Select>
 			</FormControl>
 		</div>
@@ -38,7 +45,8 @@ const Section = styled.div({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: '125px',
-	alignItems: 'center'
+	alignItems: 'center',
+	justifyContent:'space-between'
 })
 
 const Questions = styled.div({
@@ -58,34 +66,47 @@ const Border = styled.div({
 
 const InlineInputStyle = styled.div({
 
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '125px',
-    alignItems: 'center'
+	display: 'flex',
+	flexDirection: 'row',
+	gap: '125px',
+	alignItems: 'center',
+	justifyContent:'space-between'
 
 })
 
-const QuestionSection = ({ }) => {
+export interface DropdownProps{
+	label: string;
+	menuItems:string[]	
+
+}
+
+const QuestionSection = ({ sectionHeading,questionNumber,question,dropdownProps }: {
+	sectionHeading?: string;
+	questionNumber?: string;
+	question?: string;
+	dropdownProps:DropdownProps
+
+}) => {
 	return (
 		<>
 			<Section>
 				<div>
 					<div>
-						<h4>Public Avaliable Website</h4>
+						<h4>{ sectionHeading }</h4>
 					</div>
 					<div>
 						<Questions>
 							<div>
-								QA1
+								{questionNumber}
 							</div>
 							<div>
-								In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without
+								{question}
 							</div>
 						</Questions>
 					</div>
 				</div>
 				<div>
-					<Dropdown />
+					<Dropdown label={dropdownProps.label} menuItems={dropdownProps.menuItems} />
 				</div>
 			</Section>
 		</>
@@ -93,19 +114,22 @@ const QuestionSection = ({ }) => {
 	)
 }
 
-const InlineInput = () => {
+const InlineInput = ({ inputLabel, dropdownProps }: {
+	inputLabel: string;
+	dropdownProps:DropdownProps
+}) => {
 	return (
 		<InlineInputStyle>
 			<div className={css({
 				width: '60%',
 				marginLeft:'100px'
 			})}>
-				<div>Machine Readable Format</div>
+				<div>{ inputLabel }</div>
 			</div>
 			<div className={css({
 				marginLeft:'-105px'
 			})}>
-				<Dropdown />
+				<Dropdown label={dropdownProps.label} menuItems={dropdownProps.menuItems} />
 			</div>
 		</InlineInputStyle>
 	)
@@ -126,7 +150,7 @@ const ComplaintTextBox = () => {
 				rows={4}
 				defaultValue=""
 				fullWidth
-        	/>
+        		/>
 		</>
 	)
 }
@@ -147,20 +171,54 @@ function App() {
 					<h3>Online Avaliablity</h3>
 				</div>
 				<Border />
-				<QuestionSection />
+				<QuestionSection
+					key={1}
+					questionNumber={'QA1'}
+					question='In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without'
+					dropdownProps={{
+						label: "Pass",
+						menuItems:['Yes','No','Undefined']
+					}}
+					sectionHeading='Public Avaliable Website'
+				/>
 				<Border />
+
 				<div className={css({
 					display: 'flex',
 					flexDirection:'column',
 					gap:'10px'
 				})}>
 
-					<InlineInput />
+					<InlineInput
+						key={'1a'}
+						inputLabel='Machine Readable Format'
+						dropdownProps={{
+							label: 'File Type',
+							menuItems:['Type1','Type2','Other']
+						}}
+					/>
 
-					<InlineInput />
+					<InlineInput
+						key={'1b'}
+						inputLabel='Other File Format'
+						dropdownProps={{
+							label: 'File Type',
+							menuItems:['Type1','Type2','Other']
+						}}
+					/>
 				</div>
 				<Border />
-				<QuestionSection />
+				<QuestionSection
+					key={2}
+					questionNumber={'QA2'}
+					question='Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem.'
+					dropdownProps={{
+						label: "Select",
+						menuItems:['Option1','Option2','Option3']
+					}}
+					sectionHeading='Location - Specefic'
+				
+				/>
 				<Border />
 				<ComplaintTextBox />
 
